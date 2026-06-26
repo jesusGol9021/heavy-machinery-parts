@@ -17,7 +17,7 @@ const PRODUCTS = [
     stock: 45,
     warranty: '1 año',
     rating: 4.8,
-    image: 'https://images.unsplash.com/photo-1581092335285-00e85f5d1e12?w=300&h=300&fit=crop',
+    image: '/products/filtro-aire.png',
     sku: 'AIR-001',
   },
   {
@@ -28,7 +28,7 @@ const PRODUCTS = [
     stock: 12,
     warranty: '2 años',
     rating: 4.9,
-    image: 'https://images.unsplash.com/photo-1581092335285-00e85f5d1e12?w=300&h=300&fit=crop',
+    image: '/products/cilindro-hidraulico.png',
     sku: 'HYD-001',
   },
   {
@@ -39,7 +39,7 @@ const PRODUCTS = [
     stock: 30,
     warranty: '6 meses',
     rating: 4.6,
-    image: 'https://images.unsplash.com/photo-1581092335285-00e85f5d1e12?w=300&h=300&fit=crop',
+    image: '/products/banda-transmision.png',
     sku: 'TRA-001',
   },
   {
@@ -50,8 +50,8 @@ const PRODUCTS = [
     stock: 8,
     warranty: '1 año',
     rating: 4.7,
-    image: 'https://images.unsplash.com/photo-1581092335285-00e85f5d1e12?w=300&h=300&fit=crop',
-    sku: 'BAT-001',
+    image: '/products/bateria-industrial.png',
+    sku: 'BAT-200',
   },
   {
     id: 5,
@@ -61,8 +61,8 @@ const PRODUCTS = [
     stock: 20,
     warranty: '6 meses',
     rating: 4.5,
-    image: 'https://images.unsplash.com/photo-1581092335285-00e85f5d1e12?w=300&h=300&fit=crop',
-    sku: 'VAL-001',
+    image: '/products/valvula-solenoide.png',
+    sku: 'VS-024',
   },
   {
     id: 6,
@@ -71,9 +71,9 @@ const PRODUCTS = [
     price: 450.00,
     stock: 15,
     warranty: '1 año',
-    rating: 4.8,
-    image: 'https://images.unsplash.com/photo-1581092335285-00e85f5d1e12?w=300&h=300&fit=crop',
-    sku: 'GEA-001',
+    rating: 4.4,
+    image: '/products/rueda-dentada.png',
+    sku: 'RD-48T',
   },
   {
     id: 7,
@@ -82,9 +82,9 @@ const PRODUCTS = [
     price: 85.00,
     stock: 60,
     warranty: '6 meses',
-    rating: 4.4,
-    image: 'https://images.unsplash.com/photo-1581092335285-00e85f5d1e12?w=300&h=300&fit=crop',
-    sku: 'MAN-001',
+    rating: 4.6,
+    image: '/products/manguera-hidraulica.png',
+    sku: 'MH-34',
   },
   {
     id: 8,
@@ -93,9 +93,9 @@ const PRODUCTS = [
     price: 650.00,
     stock: 10,
     warranty: '1 año',
-    rating: 4.9,
-    image: 'https://images.unsplash.com/photo-1581092335285-00e85f5d1e12?w=300&h=300&fit=crop',
-    sku: 'ALT-001',
+    rating: 4.7,
+    image: '/products/alternador.png',
+    sku: 'ALT-80',
   },
 ]
 

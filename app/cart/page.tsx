@@ -131,9 +131,12 @@ export default function CartPage() {
               </div>
 
               {/* Checkout Button */}
-              <button className="w-full px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white rounded-lg font-semibold transition duration-200 mb-4">
+              <Link
+                href="/checkout"
+                className="w-full px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white rounded-lg font-semibold transition duration-200 mb-4 block text-center"
+              >
                 Ir al Checkout
-              </button>
+              </Link>
 
               {/* Continue Shopping */}
               <Link
