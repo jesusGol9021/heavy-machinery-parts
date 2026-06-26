@@ -1,16 +1,27 @@
-import { auth } from '@/lib/auth'
-import { headers } from 'next/headers'
-import { Header } from '@/components/header'
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { Zap, Users, Truck, Shield, ArrowRight } from 'lucide-react'
+import { Zap, Users, Truck, Shield, ArrowRight, Menu } from 'lucide-react'
 
-export default async function Page() {
-  const session = await auth.api.getSession({ headers: await headers() })
+export default function Page() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-card to-background">
-      <Header session={session} />
+      {/* Simple Header */}
+      <header className="bg-sidebar text-sidebar-foreground shadow-lg">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center font-bold text-primary">
+              PH
+            </div>
+            <span className="text-xl font-bold hidden md:inline">PartsHub</span>
+          </div>
+          <nav className="flex gap-6 items-center">
+            <Link href="/" className="hover:text-accent transition">Home</Link>
+            <Link href="/products" className="hover:text-accent transition">Productos</Link>
+            <Link href="/contact" className="hover:text-accent transition">Contacto</Link>
+            <Link href="/sign-in" className="px-4 py-2 bg-accent text-primary rounded-lg hover:bg-accent/90 transition">Login</Link>
+          </nav>
+        </div>
+      </header>
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20">
@@ -25,15 +36,15 @@ export default async function Page() {
               Entrega rápida, garantía certificada y precios competitivos.
             </p>
             <div className="flex gap-4 flex-wrap">
-              <Link href="/catalog">
-                <Button size="lg" className="bg-accent hover:bg-accent/90 text-primary">
-                  Ver Catálogo <ArrowRight className="ml-2" size={20} />
-                </Button>
+              <Link href="/products">
+                <button className="px-8 py-3 bg-accent hover:bg-accent/90 text-primary rounded-lg font-semibold transition flex items-center gap-2">
+                  Ver Catálogo <ArrowRight size={20} />
+                </button>
               </Link>
               <Link href="/sign-up">
-                <Button size="lg" variant="outline">
+                <button className="px-8 py-3 border-2 border-accent text-accent hover:bg-accent/10 rounded-lg font-semibold transition">
                   Crear Cuenta
-                </Button>
+                </button>
               </Link>
             </div>
           </div>
@@ -102,10 +113,10 @@ export default async function Page() {
             Solicita una cotización personalizada para tus necesidades específicas.
             Nuestro equipo de expertos estará encantado de asistirte.
           </p>
-          <Link href={session?.user ? '/quotations/new' : '/sign-up'}>
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-primary">
+          <Link href="/sign-up">
+            <button className="px-8 py-3 bg-accent hover:bg-accent/90 text-primary rounded-lg font-semibold transition">
               Solicitar Cotización
-            </Button>
+            </button>
           </Link>
         </div>
       </section>
