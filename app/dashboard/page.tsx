@@ -1,147 +1,141 @@
+'use client'
+
+import { useAuth } from '@/context/auth-context'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { Header } from '@/components/header'
-import { auth } from '@/lib/auth'
-import { headers, redirect } from 'next/headers'
-import { getUserOrders } from '@/app/actions/orders'
-import { getUserQuotations } from '@/app/actions/quotations'
-import { motion } from 'framer-motion'
+import { User, ShoppingBag, Heart, LogOut } from 'lucide-react'
 import Link from 'next/link'
-import { ShoppingBag, FileText, Settings, MessageSquare } from 'lucide-react'
 
-export default async function DashboardPage() {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session?.user) redirect('/sign-in')
+export default function DashboardPage() {
+  const { user, logout } = useAuth()
+  const router = useRouter()
 
-  const orders = await getUserOrders()
-  const quotations = await getUserQuotations()
+  useEffect(() => {
+    if (!user) {
+      router.push('/sign-in')
+    }
+  }, [user, router])
+
+  if (!user) {
+    return null
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-card">
-      <Header session={session} />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <Header />
 
       <div className="container mx-auto px-4 py-12">
-        {/* Welcome */}
+        {/* Welcome Section */}
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-foreground mb-2">
-            Bienvenido, {session.user.name || 'Usuario'}
+          <h1 className="text-4xl font-bold text-white mb-2">
+            Bienvenido, <span className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">{user.name}</span>
           </h1>
-          <p className="text-muted-foreground">Gestiona tus compras y cotizaciones</p>
+          <p className="text-slate-400">Gestiona tu cuenta y tus órdenes desde aquí</p>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid md:grid-cols-4 gap-6 mb-12">
-          {[
-            { icon: ShoppingBag, label: 'Órdenes', value: orders.length, color: 'from-blue-500 to-blue-600' },
-            { icon: FileText, label: 'Cotizaciones', value: quotations.length, color: 'from-purple-500 to-purple-600' },
-            { icon: MessageSquare, label: 'Pendientes', value: quotations.filter(q => q.status === 'pending').length, color: 'from-orange-500 to-orange-600' },
-            { icon: Settings, label: 'Cuenta', value: 'Activa', color: 'from-green-500 to-green-600' },
-          ].map((stat, i) => (
-            <div
-              key={i}
-              className={`bg-gradient-to-br ${stat.color} rounded-xl p-6 text-white shadow-lg`}
-            >
-              <stat.icon size={32} className="mb-3 opacity-80" />
-              <p className="text-sm opacity-90">{stat.label}</p>
-              <p className="text-3xl font-bold">{stat.value}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Orders and Quotations */}
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Recent Orders */}
-          <div className="bg-card border border-border rounded-xl p-8">
-            <h2 className="text-2xl font-bold text-foreground mb-6">Órdenes Recientes</h2>
-            {orders.length === 0 ? (
-              <p className="text-muted-foreground">No has realizado compras aún</p>
-            ) : (
-              <div className="space-y-4">
-                {orders.slice(0, 5).map((order) => (
-                  <Link
-                    key={order.id}
-                    href={`/orders/${order.id}`}
-                    className="p-4 bg-background border border-border rounded-lg hover:bg-muted transition flex justify-between items-center"
-                  >
-                    <div>
-                      <p className="font-semibold text-foreground">Orden #{order.id}</p>
-                      <p className="text-sm text-muted-foreground">{new Date(order.createdAt).toLocaleDateString('es-ES')}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-accent">${order.totalAmount}</p>
-                      <p className={`text-xs font-semibold ${order.status === 'completed' ? 'text-green-600' : 'text-yellow-600'}`}>
-                        {order.status === 'completed' ? 'Completada' : 'Pendiente'}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {/* Total Orders */}
+          <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 hover:border-orange-500/50 transition">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-orange-500/20 rounded-lg">
+                <ShoppingBag className="text-orange-400" size={24} />
               </div>
-            )}
-            <Link
-              href="/orders"
-              className="inline-block mt-6 text-accent hover:text-accent/80 font-semibold"
-            >
-              Ver todas las órdenes →
-            </Link>
+              <div>
+                <p className="text-slate-400 text-sm">Órdenes Totales</p>
+                <p className="text-white text-2xl font-bold">0</p>
+              </div>
+            </div>
           </div>
 
-          {/* Recent Quotations */}
-          <div className="bg-card border border-border rounded-xl p-8">
-            <h2 className="text-2xl font-bold text-foreground mb-6">Cotizaciones</h2>
-            {quotations.length === 0 ? (
-              <p className="text-muted-foreground">No has solicitado cotizaciones aún</p>
-            ) : (
-              <div className="space-y-4">
-                {quotations.slice(0, 5).map((quote) => (
-                  <Link
-                    key={quote.id}
-                    href={`/quotations/${quote.id}`}
-                    className="p-4 bg-background border border-border rounded-lg hover:bg-muted transition flex justify-between items-center"
-                  >
-                    <div>
-                      <p className="font-semibold text-foreground">Cotización #{quote.id}</p>
-                      <p className="text-sm text-muted-foreground">{new Date(quote.createdAt).toLocaleDateString('es-ES')}</p>
-                    </div>
-                    <p className={`text-xs font-semibold ${quote.status === 'approved' ? 'text-green-600' : quote.status === 'pending' ? 'text-yellow-600' : 'text-red-600'}`}>
-                      {quote.status === 'approved' ? 'Aprobada' : quote.status === 'pending' ? 'Pendiente' : 'Rechazada'}
-                    </p>
-                  </Link>
-                ))}
+          {/* Favorites */}
+          <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 hover:border-orange-500/50 transition">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-red-500/20 rounded-lg">
+                <Heart className="text-red-400" size={24} />
               </div>
-            )}
-            <Link
-              href="/quotations"
-              className="inline-block mt-6 text-accent hover:text-accent/80 font-semibold"
-            >
-              Ver todas las cotizaciones →
-            </Link>
+              <div>
+                <p className="text-slate-400 text-sm">Favoritos</p>
+                <p className="text-white text-2xl font-bold">0</p>
+              </div>
+            </div>
+          </div>
+
+          {/* User Info */}
+          <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 hover:border-orange-500/50 transition">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-500/20 rounded-lg">
+                <User className="text-blue-400" size={24} />
+              </div>
+              <div>
+                <p className="text-slate-400 text-sm">Email</p>
+                <p className="text-white text-sm font-semibold truncate">{user.email}</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Account Settings */}
-        <div className="mt-12 bg-card border border-border rounded-xl p-8">
-          <h2 className="text-2xl font-bold text-foreground mb-6">Información de Cuenta</h2>
-          <div className="grid md:grid-cols-2 gap-6">
+        {/* Account Info Card */}
+        <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-8 mb-12">
+          <h2 className="text-2xl font-bold text-white mb-6">Información de la Cuenta</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <p className="text-muted-foreground text-sm">Nombre</p>
-              <p className="text-lg font-semibold text-foreground">{session.user.name || 'No especificado'}</p>
+              <p className="text-slate-400 text-sm mb-2">Nombre</p>
+              <p className="text-white text-lg font-semibold">{user.name}</p>
             </div>
             <div>
-              <p className="text-muted-foreground text-sm">Email</p>
-              <p className="text-lg font-semibold text-foreground">{session.user.email}</p>
-            </div>
-            <div>
-              <p className="text-muted-foreground text-sm">Teléfono</p>
-              <p className="text-lg font-semibold text-foreground">{session.user.phone || 'No especificado'}</p>
-            </div>
-            <div>
-              <p className="text-muted-foreground text-sm">Rol</p>
-              <p className="text-lg font-semibold text-foreground capitalize">{session.user.role}</p>
+              <p className="text-slate-400 text-sm mb-2">Email</p>
+              <p className="text-white text-lg font-semibold">{user.email}</p>
             </div>
           </div>
+
+          <div className="border-t border-slate-700 mt-8 pt-8">
+            <h3 className="text-lg font-semibold text-white mb-4">Acciones</h3>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                href="/products"
+                className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white rounded-lg font-semibold transition duration-200 text-center"
+              >
+                Ver Catálogo
+              </Link>
+              <button
+                onClick={() => {
+                  logout()
+                  router.push('/')
+                }}
+                className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-2"
+              >
+                <LogOut size={18} />
+                Cerrar Sesión
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Links */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Link
-            href="/settings"
-            className="inline-block mt-6 px-6 py-2 bg-accent text-primary rounded-lg hover:bg-accent/90 transition font-semibold"
+            href="/cart"
+            className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 hover:border-orange-500/50 transition flex items-center justify-between group"
           >
-            Editar Perfil
+            <div>
+              <h3 className="text-white font-semibold mb-1">Mi Carrito</h3>
+              <p className="text-slate-400 text-sm">Ver productos agregados</p>
+            </div>
+            <ShoppingBag className="text-orange-400 group-hover:scale-110 transition" size={24} />
+          </Link>
+
+          <Link
+            href="/products"
+            className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 hover:border-orange-500/50 transition flex items-center justify-between group"
+          >
+            <div>
+              <h3 className="text-white font-semibold mb-1">Explorar Productos</h3>
+              <p className="text-slate-400 text-sm">Ver catálogo completo</p>
+            </div>
+            <ShoppingBag className="text-orange-400 group-hover:scale-110 transition" size={24} />
           </Link>
         </div>
       </div>
