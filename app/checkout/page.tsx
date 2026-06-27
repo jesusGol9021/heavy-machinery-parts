@@ -9,7 +9,7 @@ import { Header } from '@/components/header'
 import { CreditCard, MapPin, Mail, Phone, CheckCircle } from 'lucide-react'
 
 export default function CheckoutPage() {
-  const { items, getTotal, clearCart } = useCart()
+  const { items, total, clearCart } = useCart()
   const { user } = useAuth()
   const router = useRouter()
   const [step, setStep] = useState<'shipping' | 'payment' | 'confirmation'>('shipping')
@@ -26,10 +26,10 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'transfer'>('card')
   const [loading, setLoading] = useState(false)
 
-  const subtotal = getTotal()
+  const subtotal = total
   const shipping = subtotal > 500 ? 0 : 15
   const tax = subtotal * 0.08
-  const total = subtotal + shipping + tax
+  const finalTotal = subtotal + shipping + tax
 
   const handleShippingSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -137,7 +137,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="border-t border-slate-600 pt-3 mt-3 flex justify-between text-lg font-bold text-white">
                   <span>Total:</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>${finalTotal.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -280,7 +280,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="border-t border-slate-700 pt-2 flex justify-between text-lg font-bold text-orange-400">
                   <span>Total:</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>${finalTotal.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -401,7 +401,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="border-t border-slate-700 pt-2 flex justify-between text-lg font-bold text-orange-400">
                   <span>Total:</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>${finalTotal.toFixed(2)}</span>
                 </div>
               </div>
             </div>
